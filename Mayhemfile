@@ -3,5 +3,5 @@ project: logtop
 target: logtop-fuzz
 
 cmds:
-  - cmd: /logtop -close_fd_mask=2
+  - cmd: /logtop-fuzz -close_fd_mask=2
     libfuzzer: true
