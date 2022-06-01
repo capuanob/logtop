@@ -26,12 +26,20 @@ SRC = $(LIB_SRC) src/curses.c src/stdout.c src/main.c
 LIB_OBJ = $(LIB_SRC:.c=.o)
 OBJ = $(SRC:.c=.o)
 
-CC = gcc
+
 override INCLUDE += .
 LIB = $(shell pkg-config --libs ncursesw)  #-lefence
 CFLAGS += -O3 -Wall -fPIC -Wextra -pedantic -Wstrict-prototypes -I$(INCLUDE) $(shell pkg-config --cflags ncursesw)
 RM = rm -fr
 LDFLAGS =
+
+ifeq ($(LIBFUZZ),1)
+	CC = clang
+	CFLAGS += -fsanitize=fuzzer-no-link
+	LDFLAGS += -fsanitize=fuzzer-no-link
+else
+	CC = gcc
+endif
 
 $(NAME):	$(OBJ)
 		$(CC) -o $(NAME) $(OBJ) $(LIB) $(LDFLAGS)
